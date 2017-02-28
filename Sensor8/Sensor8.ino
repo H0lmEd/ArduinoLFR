@@ -34,19 +34,32 @@ void loop()
     qtrrc.read(sensorValues, QTR_NO_EMITTER_PIN);
     unsigned int position = qtrrc.readLine(sensorValues);
   
-    int error = position - 2000;
-    Serial.print("Error: ");
+    //int error = position - 2000;
+    //Serial.print("Error: ");
 
-    Serial.print(error);
-    Serial.println(' ');
-/*
+    //Serial.print(error * 10 / 1001);
+    //Serial.println(' ');
+
     unsigned char i;
-    for (i = 0; i < NUM_SENSORS; i++) {
+    /*for (i = 0; i < NUM_SENSORS; i++) {
         Serial.print(sensorValues[i] * 10 / 1001);
         Serial.print(' ');
     }
     Serial.print("   ");
     Serial.println(position);
-*/  
+ */
+    if (position > 2400  && position < 3000) {
+      Serial.print("Forward");
+      Serial.println(position);
+    } else if (position > 3000) {
+      Serial.print("LEFT");
+      Serial.println(position);
+    } else if (position < 2400) {
+      Serial.print("RIGHT");
+      Serial.println(position);
+    } else {
+      Serial.print("Error, position Val: ");
+      Serial.println(position);
+    }
     delay(250);
 }
