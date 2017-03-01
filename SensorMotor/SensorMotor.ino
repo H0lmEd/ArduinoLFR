@@ -1,10 +1,18 @@
-#include <AFMotor.h>
+#include <PololuQTRSensors.h>
+#include <QTRSensors.h> // Sensor Libraries
+
+#include <AFMotor.h> // Motor Library
 
 // "motor" on port 1 of the motorshield:
 AF_DCMotor motor(1);   //right wheel
-
 // "motor2" on port 2 of the motorshield:
 AF_DCMotor motor2(2); // left wheel
+
+#define NUM_SENSORS     6       // number of sensors used
+#define TIMEOUT         2500    // Waits 2500us for sensors
+
+QTRSensorsRC qtrrc((unsigned char[]) {A0,A1,A2,A3,A4,A5}, NUM_SENSORS,                      TIMEOUT, QTR_NO_EMITTER_PIN);
+unsigned int sensorValues[NUM_SENSORS];
 
 int motorForward(int x) {
   motor.run(FORWARD);
@@ -38,6 +46,12 @@ int motorStop(int x) {
 
 void setup() {
   Serial.begin(9600);           // set up Serial library at 9600 bps
+  delay(500);
+  int i;
+  for (i = 0; i < 250; i++) {
+    qtrrcalibrate(QTR_EMITERS_ON);
+    delay(20);
+  }                 // NEED THIS AND BELOW TO RUN TOGETHER???
   // CALIBRATION
   motor.setSpeed(125);     //max speed = 255
   motor2.setSpeed(125);
@@ -52,41 +66,51 @@ void setup() {
 
   motor.setSpeed(200);    
   motor2.setSpeed(200);
+  
+  for (i = 0; i < NUM_SENSORS; i++) {
+    Serial.print("Min:\t\tMax:\n");
+    Serial.print(qtrrc.calibratedMinimumOn[i]);
+    Serial.print("\t\t");
+    Serial.print(qtrrc.calibratedMaximumOn[i]);
+    Serial.println(" ");
+  }
 }
 
+unsigned char i;
+
 void loop() {
+  
+  qtrrc.read(sensorValues, QTR_NO_EMITTER_PIN);
+  unsigned int position = qtrrc.readLine(sensorValues);
+  
+  if (position > 2400 && position < 3000) { //change these vals TEST
+    Serial.print("FORWARD");
+    motorForward(200);
+    motorStop(100);
+  } else if (position > 3000) {
+    Serial.print("LEFT");
+    motorLeft(100);
+    motorStop(100);
+  } else if (position < 2400) {
+    Serial.print("RIGHT");
+    motorRight(100);
+    motorStop(100);
+  } else {
+    Serial.print("Error, position out of range: ");
+  }
+  Serial.println(position);
+  delay(250);
+
+/*  legacy code pre-merge
   motorStop(100); //Stop Motor
+  motorLeft(100);
+  motorStop(100);
+  motorRight(100);
+  motorStop(100); 
+  motorForward(200);
+  motorStop(100);
+  motorBackward(200);
+  motorStop(100);
+*/
 
-  motor.run(FORWARD);      // command motor 1 to go forwards
-  motor2.run(BACKWARD);  // command motor 2 to go backwards
-  delay(100);
-
-
-  motor.run(RELEASE);      // command motor 1 to stop
-motor2.run(RELEASE);  // command motor 2 to stop
-delay(100);
-
-motor.run(BACKWARD);     // command motor 1 to go backwards
-motor2.run(FORWARD);  //command motor 2 to go forwards
-delay(100);
-
-motor.run(RELEASE);      // command motor 1 to stop
-motor2.run(RELEASE);  // command motor 2 to stop
-delay(100);
-
-motor.run(FORWARD);      // command motor 1 to go forawrds
-motor2.run(FORWARD);  // command motor 2 to go forwards
-delay(200);
-
-motor.run(RELEASE);      // command motor 1 to stop
-motor2.run(RELEASE);  // command motor 2 to stop
-delay(100);
-
-motor.run(BACKWARD);      // command motor 1 to go backwards
-motor2.run(BACKWARD);  // command motor 2 to go backwards
-delay(200);
-
-motor.run(RELEASE);      // command motor 1 to stop
-motor2.run(RELEASE);  // command motor 2 to stop
-delay(100);
 }
