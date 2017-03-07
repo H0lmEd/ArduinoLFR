@@ -85,15 +85,15 @@ void loop() {
   
   if (position > 2400 && position < 3000) { //change these vals TEST
     Serial.print("FORWARD");
-    motorForward(10);
+    motorForward(50);
     //motorStop(25);
   } else if (position > 3000) {
     Serial.print("LEFT");
-    motorLeft(10);
+    motorLeft(50);
     //motorStop(25);
   } else if (position < 2400) {
     Serial.print("RIGHT");
-    motorRight(10);
+    motorRight(50);
     //motorStop(25);
   } else {
     Serial.print("Error, position out of range: ");
