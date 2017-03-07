@@ -64,8 +64,8 @@ void setup() {
   motorStop(100);
   motorRight(500);
   */
-  motor.setSpeed(500);    
-  motor2.setSpeed(500);
+  motor.setSpeed(250);    
+  motor2.setSpeed(250);
   
   for (i = 0; i < NUM_SENSORS; i++) {
     Serial.print("Min:\t\tMax:\n");
@@ -85,22 +85,22 @@ void loop() {
   
   if (position > 2400 && position < 3000) { //change these vals TEST
     Serial.print("FORWARD");
-    motorForward(100);
-    motorStop(25);
+    motorForward(10);
+    //motorStop(25);
   } else if (position > 3000) {
     Serial.print("LEFT");
-    motorLeft(50);
-    motorStop(25);
+    motorLeft(10);
+    //motorStop(25);
   } else if (position < 2400) {
     Serial.print("RIGHT");
-    motorRight(50);
-    motorStop(25);
+    motorRight(10);
+    //motorStop(25);
   } else {
     Serial.print("Error, position out of range: ");
-    motorStop(50);
+    //motorStop(1000);
   }
   Serial.println(position);
-  delay(250);
+  //delay(250);
 
 /*  legacy code pre-merge
   motorStop(100); //Stop Motor
