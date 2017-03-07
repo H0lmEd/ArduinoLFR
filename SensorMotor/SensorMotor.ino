@@ -29,12 +29,12 @@ int motorBackward(int x) {
 int motorLeft(int x) {
   motor.run(FORWARD);
   motor2.run(BACKWARD);
-  delay(X);
+  delay(x);
 }
 
 int motorRight(int x) {
   motor.run(BACKWARD);
-  motor.run(FORWARD);
+  motor2.run(FORWARD);
   delay(x);
 }
 
@@ -47,9 +47,9 @@ int motorStop(int x) {
 void setup() {
   Serial.begin(9600);           // set up Serial library at 9600 bps
   delay(500);
-  int i;
+  int i; /*
   for (i = 0; i < 250; i++) {
-    qtrrcalibrate(QTR_EMITERS_ON);
+    qtrrc.calibrate(QTR_EMITTERS_ON);
     delay(20);
   }                 // NEED THIS AND BELOW TO RUN TOGETHER???
   // CALIBRATION
@@ -63,9 +63,9 @@ void setup() {
   motorLeft(1000);
   motorStop(100);
   motorRight(500);
-
-  motor.setSpeed(200);    
-  motor2.setSpeed(200);
+  */
+  motor.setSpeed(500);    
+  motor2.setSpeed(500);
   
   for (i = 0; i < NUM_SENSORS; i++) {
     Serial.print("Min:\t\tMax:\n");
@@ -85,18 +85,19 @@ void loop() {
   
   if (position > 2400 && position < 3000) { //change these vals TEST
     Serial.print("FORWARD");
-    motorForward(200);
-    motorStop(100);
+    motorForward(100);
+    motorStop(25);
   } else if (position > 3000) {
     Serial.print("LEFT");
-    motorLeft(100);
-    motorStop(100);
+    motorLeft(50);
+    motorStop(25);
   } else if (position < 2400) {
     Serial.print("RIGHT");
-    motorRight(100);
-    motorStop(100);
+    motorRight(50);
+    motorStop(25);
   } else {
     Serial.print("Error, position out of range: ");
+    motorStop(50);
   }
   Serial.println(position);
   delay(250);
