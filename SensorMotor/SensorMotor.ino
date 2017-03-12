@@ -64,8 +64,8 @@ void setup() {
   motorStop(100);
   motorRight(500);
   */
-  motor.setSpeed(250);    
-  motor2.setSpeed(250);
+  motor.setSpeed(255); //250 is good   
+  motor2.setSpeed(255);
   
   for (i = 0; i < NUM_SENSORS; i++) {
     Serial.print("Min:\t\tMax:\n");
