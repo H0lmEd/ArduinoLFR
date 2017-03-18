@@ -47,23 +47,7 @@ int motorStop(int x) {
 void setup() {
   Serial.begin(9600);           // set up Serial library at 9600 bps
   delay(500);
-  int i; /*
-  for (i = 0; i < 250; i++) {
-    qtrrc.calibrate(QTR_EMITTERS_ON);
-    delay(20);
-  }                 // NEED THIS AND BELOW TO RUN TOGETHER???
-  // CALIBRATION
-  motor.setSpeed(125);     //max speed = 255
-  motor2.setSpeed(125);
-
-  motorLeft(500);
-  motorStop(100);
-  motorRight(900);
-  motorStop(100);
-  motorLeft(1000);
-  motorStop(100);
-  motorRight(500);
-  */
+  int i; 
   motor.setSpeed(255); //250 is good   
   motor2.setSpeed(255);
   
@@ -85,15 +69,15 @@ void loop() {
   
   if (position > 2400 && position < 3000) { //change these vals TEST
     Serial.print("FORWARD");
-    motorForward(50);
+    motorForward(0);
     //motorStop(25);
   } else if (position > 3000) {
     Serial.print("LEFT");
-    motorLeft(50);
+    motorLeft(0);
     //motorStop(25);
   } else if (position < 2400) {
     Serial.print("RIGHT");
-    motorRight(50);
+    motorRight(0);
     //motorStop(25);
   } else {
     Serial.print("Error, position out of range: ");
