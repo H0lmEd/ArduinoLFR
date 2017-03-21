@@ -7,11 +7,11 @@
 #include <AFMotor.h>
 
 #define Kp  0.2 //change these two depending on weight, kd 5x kp
-#define Kd  5
-#define rightMaxSpeed   200 //255?
-#define leftMaxSpeed    200
-#define rightBaseSpeed  100 // maybe lower this
-#define leftBaseSpeed   100
+#define Kd  4
+#define rightMaxSpeed   250 //255?
+#define leftMaxSpeed    250
+#define rightBaseSpeed  200 // maybe lower this
+#define leftBaseSpeed   200
 #define NUM_SENSORS 6
 #define TIMEOUT     2500 //wait 2500us for sensors
 
@@ -72,10 +72,12 @@ unsigned char i;
 int lastError = 0;
 
 void loop() {
-  
+  //motor.setSpeed(150);
+  //motor2.setSpeed(150);
   unsigned int sensors[6];
-  int position = qtrrc.readLine(sensors);
-  int error = position - 2000;
+  qtrrc.read(sensors, QTR_NO_EMITTER_PIN);
+  unsigned int position = qtrrc.readLine(sensors);
+  int error = position - 2500; //2000? 2500?
 
   int motorSpeed = Kp * error + Kd * (error - lastError);
   lastError = error;
@@ -89,7 +91,7 @@ void loop() {
   if (leftMotorSpeed < 0) leftMotorSpeed = 0;
   
   //motorSpeed = 150;
-  Serial.println("Motor\tright\tleft\terror\tkp\kd");
+  Serial.println("Motor\tright\tleft\terror\tkp\tposition");
   Serial.print(motorSpeed);
   Serial.print("\t");
   Serial.print(rightMotorSpeed);
@@ -100,7 +102,7 @@ void loop() {
   Serial.print("\t");
   Serial.print(Kp);
   Serial.print("\t");
-  Serial.println(Kd);
+  Serial.println(position);
   
   motor.setSpeed(rightMotorSpeed);
   motor2.setSpeed(leftMotorSpeed);
